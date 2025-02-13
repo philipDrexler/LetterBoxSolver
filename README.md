@@ -5,7 +5,7 @@ Prunes impossible n-grams and invalid word paths from search space.
 
 ## Demo
 
-![Demo](https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExM2F2cjVlaGVqdmZjN3ZtemVrZnlwZGxkeWFud3Y5bnczNXdnM3J5biZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/K6fQhuwJ8RNhhDNhsy/giphy.gif)
+![Demo](https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExMGx4bWozMnpxZmUzZzZuMW5tbjltNWFnOG43YmswYnZnd24xNzZlaiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/Y3xNwnbOou22kuhrGq/giphy.gif)
 
 ## Play Letter Boxed:
 
