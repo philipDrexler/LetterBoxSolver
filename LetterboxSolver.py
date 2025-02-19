@@ -76,12 +76,12 @@ class Solver:
 		# print(COMPARE_SET.intersection(word_set))
 		return len(self.COMPARE_SET) == len(self.COMPARE_SET.intersection(word_set))
 
-	def deep_search(self, current_solution):
+	def deep_search(self, current_solution, depth):
 		for idx, word in enumerate(self.all_possible_words):
-			self.deep_search2([word], [idx])
+			self.deep_search2([word], [idx], depth)
 		
-	def deep_search2(self, current_solution, indeces):
-		if len(current_solution) >= self.max_depth:
+	def deep_search2(self, current_solution, indeces, depth):
+		if len(current_solution) >= depth:
 			if self.AllLettersUsed(current_solution):
 				print(f"found solution = {current_solution}")
 			return
@@ -95,33 +95,44 @@ class Solver:
 				indeces.pop()
 				return
 			else:
-				self.deep_search2(current_solution, indeces)
+				self.deep_search2(current_solution, indeces, depth)
 			current_solution.pop()
 			indeces.pop()
 			
 	# start the real path finding
-	def Solve(self):
+	def Solve(self, exhaustive=True):
 		self.regexp = re.compile(r"(.)\1")
 		self.all_possible_words = list(filter(lambda word: self.filter_words2(word), self.all_possible_words))
 		self.all_possible_words = list(filter(lambda word: self.filter_words3(word), self.all_possible_words))
 		self.all_possible_words = list(filter(lambda word: self.filter_words4(word), self.all_possible_words))
-		self.all_possible_words.sort(key=lambda x: len(x), reverse=True)
+		# self.all_possible_words.sort(key=lambda x: len(x), reverse=True)
+		self.all_possible_words.sort()
 		self.COMPARE_SET = set([x.lower() for sublist in self.ADJACENCIES for x in sublist])
-		for word in self.all_possible_words:
-			if self.AllLettersUsed(word):
-				print(f"FOUND SUPER WORD = {word}")
+		
+		solution = [word for word in self.all_possible_words if self.AllLettersUsed(word)]
+		for word in solution:
+			print(f"FOUND SUPER WORD = {word}")
+		
+		if len(solution) > 0:
+			input(f"continue...")
 		print("FINISH SOLO WORD SEARCH")
 
-		setLETTERS = set(self.LETTERS)
-		for idx, word in enumerate(self.all_possible_words):
-			for idx2, word2 in enumerate([x for y, x in enumerate(self.all_possible_words) if y > idx and x != word]):
-				size = len(setLETTERS.intersection(set(word), set(word2))) 
-				if (self.AllLettersUsed([word, word2])):
-					print(f"FOUND (potential) PAIR = {word}, {word2}")
-		print("FINISH DOUBLE WORD SEARCH")
-
-		solution = []
-		self.deep_search(solution)
+		# setLETTERS = set(self.LETTERS)
+		# for idx, word in enumerate(self.all_possible_words):
+		# 	for idx2, word2 in enumerate([x for y, x in enumerate(self.all_possible_words) if y > idx and x != word]):
+		# 		size = len(setLETTERS.intersection(set(word), set(word2))) 
+		# 		if (self.AllLettersUsed([word, word2])):
+		# 			print(f"FOUND (potential) PAIR = {word}, {word2}")
+		# print("FINISH DOUBLE WORD SEARCH")
+		
+		self.deep_search(solution, 2)
+		print("FINISH DEPTH 2 SEARCH")
+		
+		if not exhaustive: return
+		input(f"continue exhaustive search...")
+		for i in range(3, self.max_depth+1):
+			self.deep_search(solution, i)
+			
 		print("FINISH MAX DEPTH SEARCH")
 
 # MAIN
@@ -136,6 +147,8 @@ if __name__ == "__main__":
 	side3 = [str(letter) for letter in user_input[:3]]
 	user_input = input("side 4: ")
 	side4 = [str(letter) for letter in user_input[:3]]
+	user_input = input("look for 3 word solutions? (y/n): ")
+	exhaustive = user_input != '' and user_input[0].lower() == 'y'
 	
 	solver = Solver(side1, side2, side3, side4)
-	solver.Solve()
+	solver.Solve(exhaustive)
